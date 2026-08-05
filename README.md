@@ -2,6 +2,11 @@
   <img src="assets/banner.svg" alt="Banner">
 </div>
 
+<p align="center">
+<a href="https://github.com/ishandutta2007/Awesome-Awesome-Awesome"><img src="https://img.shields.io/badge/Awesome-%E2%9C%94-blueviolet?style=flat-square&logo=github" alt="Awesome"/></a>
+<a href="https://discord.gg/jc4xtF58Ve"><img src="https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Discord" /></a>
+</p>
+
 # Awesome-Group-Query-Attention
 
 ## 🧠 Grouped-Query Attention: History, Progression, Variants, & Applications
@@ -120,3 +125,5 @@ To advance this documentation repository, scaling architecture, or MLOps automat
 * Generate a **comprehensive Markdown table** explicitly comparing Multi-Head Attention (MHA), Multi-Query Attention (MQA), Grouped-Query Attention (GQA), and Multi-head Latent Attention (MLA) across VRAM cache scaling rates, training stability metrics, and serving latencies.
 
 ***
+
+<!-- SEO: Awesome Group Query Attention, LLM, Large Language Models, Generative AI, Transformer, Multi-Head Attention, Multi-Query Attention -->
