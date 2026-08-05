@@ -62,15 +62,31 @@ Depending on token length requirements or extreme throughput objectives, attenti
     *   *The Shift:* Decouples attention mechanics further by compressing the KV Cache into a tiny, low-rank latent vector space. Instead of grouping separate heads explicitly, MLA mathematically compresses keys and values into a shared vector, expanding them back out instantly during execution to skip physical VRAM scaling walls entirely.
 
 ```mermaid
-┌─────────────────────────────────────────────────────────────┐
-│  Q  Q  Q  Q    Q  Q  Q  Q    Q  Q  Q  Q    Q  Q  Q  Q       │ Query Heads
-└─┬──┬──┬──┬───┘─┬──┬──┬──┬───┘─┬──┬──┬──┬───┘─┬──┬──┬──┬───┘      │
-  └──┴──┴──┼─────└──┴──┴──┼─────└──┴──┴──┼─────└──┴──┴──┼──────   │
-           ▼              ▼              ▼              ▼         │
-        ┌─────┐        ┌─────┐        ┌─────┐        ┌─────┐      │
-        │ K V │        │ K V │        │ K V │        │ K V │      │ KV Heads (Shared)
-        └─────┘        └─────┘        └─────┘        └─────┘      │
-       [Group 1]      [Group 2]      [Group 3]      [Group 4]     ┘
+flowchart TB
+    subgraph Group 1
+        Q1[Q] --> KV1[K V]
+        Q2[Q] --> KV1
+        Q3[Q] --> KV1
+        Q4[Q] --> KV1
+    end
+    subgraph Group 2
+        Q5[Q] --> KV2[K V]
+        Q6[Q] --> KV2
+        Q7[Q] --> KV2
+        Q8[Q] --> KV2
+    end
+    subgraph Group 3
+        Q9[Q] --> KV3[K V]
+        Q10[Q] --> KV3
+        Q11[Q] --> KV3
+        Q12[Q] --> KV3
+    end
+    subgraph Group 4
+        Q13[Q] --> KV4[K V]
+        Q14[Q] --> KV4
+        Q15[Q] --> KV4
+        Q16[Q] --> KV4
+    end
 ```
 
 ---
