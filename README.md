@@ -1,3 +1,7 @@
+<div align="center">
+  <img src="assets/banner.svg" alt="Banner">
+</div>
+
 # Awesome-Group-Query-Attention
 
 ## Grouped-Query Attention: History, Progression, Variants, & Applications
