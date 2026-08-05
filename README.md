@@ -4,7 +4,7 @@
 
 # Awesome-Group-Query-Attention
 
-## Grouped-Query Attention: History, Progression, Variants, & Applications
+## 🧠 Grouped-Query Attention: History, Progression, Variants, & Applications
 
 **Grouped-Query Attention (GQA)** represents a foundational paradigm shift in the structural design and inference scaling of autoregressive Large Language Models (LLMs). Formally introduced by Ainslie et al. (Google Research) in May 2023 ("GQA: Training Generalized Multi-Query Transformer Models from Multi-Head Checkpoints"), GQA established an optimal architectural compromise between multi-head attention and multi-query attention. 
 
@@ -12,7 +12,7 @@ Prior to GQA, LLM serving architecture faced a brutal trade-off: deploy Multi-He
 
 ---
 
-## 1. The Macro Chronological Evolution
+## 📅 1. The Macro Chronological Evolution
 
 The implementation of sequence model attention mechanisms has transitioned from memory-heavy individual projection states to aggressively pooled configurations, shifting toward modern variable-ratio clustering and dynamic page-allocated streaming frameworks.
 
@@ -36,7 +36,7 @@ graph LR
 
 ---
 
-## 2. Core Functional & Custom Configurations
+## ⚙️ 2. Core Functional & Custom Configurations
 
 Modern Transformer attention layers are structurally parameterized around the absolute proportion of total Query head groups mapped across underlying physical memory layouts.
 
@@ -47,7 +47,7 @@ Modern Transformer attention layers are structurally parameterized around the ab
 
 ---
 
-## 3. High-Capacity Architectural & Scaling Classes
+## 🏗️ 3. High-Capacity Architectural & Scaling Classes
 
 Depending on token length requirements or extreme throughput objectives, attention pooling utilizes specialized mathematical modifications.
 
@@ -86,7 +86,7 @@ flowchart TB
 
 ---
 
-## 4. Production Engineering Challenges & Hardware Solutions
+## 🛠️ 4. Production Engineering Challenges & Hardware Solutions
 
 Deploying dense GQA frameworks across enterprise inferencing infrastructure introduces compilation quirks and memory alignment considerations.
 
@@ -97,7 +97,7 @@ Deploying dense GQA frameworks across enterprise inferencing infrastructure intr
 
 ---
 
-## 5. Frontier Real-World AI Infrastructure Applications
+## 🚀 5. Frontier Real-World AI Infrastructure Applications
 
 | Application | Details | Year | Paper Link |
 | :--- | :--- | :--- | :--- |
@@ -107,7 +107,7 @@ Deploying dense GQA frameworks across enterprise inferencing infrastructure intr
 
 ---
 
-## References
+## 📚 References
 1. Vaswani, A., et al. (2017). Attention is all you need. *Advances in Neural Information Processing Systems (NeurIPS)*.
 2. Shazeer, N. (2019). Fast transformer decoding: One write-head is all you need. *arXiv preprint arXiv:1911.02150*.
 3. Ainslie, J., et al. (2023). GQA: Training generalized multi-query transformer models from multi-head checkpoints. *arXiv preprint arXiv:2305.13245*.
