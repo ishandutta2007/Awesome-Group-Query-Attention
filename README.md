@@ -24,15 +24,11 @@ graph LR
     style MLA fill:#fbb,stroke:#333,stroke-width:1px
 ```
 
-*   **The Unbounded Projection Era (Multi-Head Attention / MHA, 2017)**
-    *   *Concept:* The foundational attention mapping standard. Every individual Query head ($Q$) possesses its own distinct Key ($K$) and Value ($V$) head mapping projection space.
-    *   *Limitation:* Caused severe hardware memory capacity exhaustion during model serving. As sequence lengths scale out, storing the distinct Key-Value histories (KV Cache) for every single head consumes vast blocks of GPU VRAM, capping inference concurrency metrics.
-*   **The Aggressive Pooling Crash (Multi-Query Attention / MQA, 2019)**
-    *   *Concept:* Drastically flattened the memory footprint. MQA collapsed the architectural projection layer down to a singular, solitary Key and Value head shared by all Query heads simultaneously.
-    *   *Limitation:* Created structural information capacity bottlenecks. Forcing dozens of complex, distinct Query expressions to route through a single KV channel degraded target model capacity, rendering large foundation architectures unstable or prone to semantic degradation.
-*   **The Balanced Clustering Integration (Grouped-Query Attention / GQA, 2023)**
-    *   *Concept:* Engineered a flexible midway architecture. GQA organizes Query heads into discrete, isolated groups where each separate partition shares a single local Key-Value head allocation block.
-    *   *Significance:* Delivered massive hardware deployment performance leaps. GQA allows models like Llama 3 to retain the expressive contextual indexing traits of MHA while scaling out real-world generation speeds to match MQA frameworks.
+| Architecture / Concept | Concept | Limitation / Significance | Year | Paper Link |
+| :--- | :--- | :--- | :--- | :--- |
+| **The Unbounded Projection Era (Multi-Head Attention / MHA)** | The foundational attention mapping standard. Every individual Query head ($Q$) possesses its own distinct Key ($K$) and Value ($V$) head mapping projection space. | *Limitation:* Caused severe hardware memory capacity exhaustion during model serving. As sequence lengths scale out, storing the distinct Key-Value histories (KV Cache) for every single head consumes vast blocks of GPU VRAM, capping inference concurrency metrics. | 2017 | [Vaswani et al.](https://arxiv.org/abs/1706.03762) |
+| **The Aggressive Pooling Crash (Multi-Query Attention / MQA)** | Drastically flattened the memory footprint. MQA collapsed the architectural projection layer down to a singular, solitary Key and Value head shared by all Query heads simultaneously. | *Limitation:* Created structural information capacity bottlenecks. Forcing dozens of complex, distinct Query expressions to route through a single KV channel degraded target model capacity, rendering large foundation architectures unstable or prone to semantic degradation. | 2019 | [Shazeer](https://arxiv.org/abs/1911.02150) |
+| **The Balanced Clustering Integration (Grouped-Query Attention / GQA)** | Engineered a flexible midway architecture. GQA organizes Query heads into discrete, isolated groups where each separate partition shares a single local Key-Value head allocation block. | *Significance:* Delivered massive hardware deployment performance leaps. GQA allows models like Llama 3 to retain the expressive contextual indexing traits of MHA while scaling out real-world generation speeds to match MQA frameworks. | 2023 | [Ainslie et al.](https://arxiv.org/abs/2305.13245) |
 
 ---
 
@@ -40,15 +36,10 @@ graph LR
 
 Modern Transformer attention layers are structurally parameterized around the absolute proportion of total Query head groups mapped across underlying physical memory layouts.
 
-*   Mathematical Key-to-Query Mapping Ratios
-    *   **Mechanism:** Let $H_Q$ represent total Query heads and $H_{KV}$ represent Key-Value heads. The configuration controls the spatial compression layout:
-        $$G = \frac{H_Q}{H_{KV}}$$
-        *   When $H_{KV} = H_Q$ ($G=1$), the layout behaves identically to standard **Multi-Head Attention**.
-        *   When $H_{KV} = 1$ ($G=H_Q$), the layout contracts into basic **Multi-Query Attention**.
-        *   When $1 < H_{KV} < H_Q$, the system operates as **Grouped-Query Attention**, typically setting $G = 8$ for optimal balance.
-
-*   Uptraining From Baseline MHA Checkpoints
-    *   **Mechanism:** Converts an existing pre-trained MHA model into a GQA framework without needing a full pre-training run. It takes the $H_Q$ to $H_{KV}$ individual MHA keys, applies a spatial **Mean Pooling** dimension reduction across the distinct head matrices within each designated group, and runs a brief token fine-tuning phase to recalibrate projection weights.
+| Configuration | Mechanism | Year | Paper Link |
+| :--- | :--- | :--- | :--- |
+| **Mathematical Key-to-Query Mapping Ratios** | Let $H_Q$ represent total Query heads and $H_{KV}$ represent Key-Value heads. The configuration controls the spatial compression layout: <br> $$G = \frac{H_Q}{H_{KV}}$$ <br> - When $H_{KV} = H_Q$ ($G=1$), the layout behaves identically to standard **Multi-Head Attention**. <br> - When $H_{KV} = 1$ ($G=H_Q$), the layout contracts into basic **Multi-Query Attention**. <br> - When $1 < H_{KV} < H_Q$, the system operates as **Grouped-Query Attention**, typically setting $G = 8$ for optimal balance. | 2023 | [Ainslie et al.](https://arxiv.org/abs/2305.13245) |
+| **Uptraining From Baseline MHA Checkpoints** | Converts an existing pre-trained MHA model into a GQA framework without needing a full pre-training run. It takes the $H_Q$ to $H_{KV}$ individual MHA keys, applies a spatial **Mean Pooling** dimension reduction across the distinct head matrices within each designated group, and runs a brief token fine-tuning phase to recalibrate projection weights. | 2023 | [Ainslie et al.](https://arxiv.org/abs/2305.13245) |
 
 ---
 
@@ -56,10 +47,10 @@ Modern Transformer attention layers are structurally parameterized around the ab
 
 Depending on token length requirements or extreme throughput objectives, attention pooling utilizes specialized mathematical modifications.
 
-*   **Dynamic Matrix Grouping (Variable Multi-Group Topology)**
-    *   *The Shift:* Rather than freezing fixed head groups across every single layer block uniformly, variable topologies deploy broad MHA structures across early processing layers to capture fine-grained pixel or text roots, while switching to hyper-compressed GQA grouping setups deep inside internal hidden blocks.
-*   **Low-Rank Compressional Mapping (Multi-head Latent Attention / MLA)**
-    *   *The Shift:* Decouples attention mechanics further by compressing the KV Cache into a tiny, low-rank latent vector space. Instead of grouping separate heads explicitly, MLA mathematically compresses keys and values into a shared vector, expanding them back out instantly during execution to skip physical VRAM scaling walls entirely.
+| Architecture Class | The Shift | Year | Paper Link |
+| :--- | :--- | :--- | :--- |
+| **Dynamic Matrix Grouping (Variable Multi-Group Topology)** | Rather than freezing fixed head groups across every single layer block uniformly, variable topologies deploy broad MHA structures across early processing layers to capture fine-grained pixel or text roots, while switching to hyper-compressed GQA grouping setups deep inside internal hidden blocks. | 2023 | N/A |
+| **Low-Rank Compressional Mapping (Multi-head Latent Attention / MLA)** | Decouples attention mechanics further by compressing the KV Cache into a tiny, low-rank latent vector space. Instead of grouping separate heads explicitly, MLA mathematically compresses keys and values into a shared vector, expanding them back out instantly during execution to skip physical VRAM scaling walls entirely. | 2024 | [DeepSeek-AI](https://arxiv.org/abs/2405.04434) |
 
 ```mermaid
 flowchart TB
@@ -95,23 +86,20 @@ flowchart TB
 
 Deploying dense GQA frameworks across enterprise inferencing infrastructure introduces compilation quirks and memory alignment considerations.
 
-*   **The Non-Uniform Tensor Layout Compilation Penalty**
-    *   *The Problem:* Traditional tensor layout kernels are heavily optimized for balanced, perfectly symmetric matrix computations. If the group configuration $G$ does not cleanly align with the physical hardware thread configurations or SIMD width of the target GPU, memory bandwidth efficiency plummets.
-    *   *Mitigation:* Implementing specialized **FlashAttention** kernels explicitly compiled for GQA architectures. These custom setups bypass intermediate GPU global memory reads by executing the grouped head matrix operations entirely inside local SRAM registers.
-*   **The KV Cache Memory Striding Mismatch**
-    *   *The Problem:* During long-context batch serving, pointer layouts for pooled KV channels can break typical linear memory reading operations, causing latency spikes when fetching token records from scattered memory blocks.
-    *   *Mitigation:* Pairing GQA directly with **PagedAttention** architectures. PagedAttention fragments the grouped KV cache into structured, uniform virtual memory pages, ensuring clean hardware execution paths regardless of head counts.
+| Challenge | The Problem | Mitigation | Year | Paper Link |
+| :--- | :--- | :--- | :--- | :--- |
+| **The Non-Uniform Tensor Layout Compilation Penalty** | Traditional tensor layout kernels are heavily optimized for balanced, perfectly symmetric matrix computations. If the group configuration $G$ does not cleanly align with the physical hardware thread configurations or SIMD width of the target GPU, memory bandwidth efficiency plummets. | Implementing specialized **FlashAttention** kernels explicitly compiled for GQA architectures. These custom setups bypass intermediate GPU global memory reads by executing the grouped head matrix operations entirely inside local SRAM registers. | 2022 | [Dao et al. (FlashAttention)](https://arxiv.org/abs/2205.14135) |
+| **The KV Cache Memory Striding Mismatch** | During long-context batch serving, pointer layouts for pooled KV channels can break typical linear memory reading operations, causing latency spikes when fetching token records from scattered memory blocks. | Pairing GQA directly with **PagedAttention** architectures. PagedAttention fragments the grouped KV cache into structured, uniform virtual memory pages, ensuring clean hardware execution paths regardless of head counts. | 2023 | [Kwon et al. (PagedAttention)](https://arxiv.org/abs/2309.06180) |
 
 ---
 
 ## 5. Frontier Real-World AI Infrastructure Applications
 
-*   **High-Concurrency Enterprise LLM Serving (vLLM / TensorRT-LLM)**
-    *   *Application:* Maximizes simultaneous user request throughput. Transitioning open architectures to GQA configurations allows cloud hosting platforms to multiply batch capacities per GPU card without encountering out-of-memory errors.
-*   **Massive Long-Context Sequence Parsing (Gemini / Llama 3 Ultra-Long)**
-    *   *Application:* Unlocks massive text processing horizons (up to 128K+ tokens). GQA prevents the model's tracking cache from inflating exponentially, allowing systems to ingest complete document libraries or codebases in a single prompt.
-*   **Edge-Device On-Chip Deep Learning Executions (Apple Silicon / Snapdragon)**
-    *   *Application:* Minimizes processing overhead on localized consumer devices. Compressing model attention structures via GQA lowers memory footprints enough to serve interactive assistants directly on local mobile hardware and laptops.
+| Application | Details | Year | Paper Link |
+| :--- | :--- | :--- | :--- |
+| **High-Concurrency Enterprise LLM Serving (vLLM / TensorRT-LLM)** | Maximizes simultaneous user request throughput. Transitioning open architectures to GQA configurations allows cloud hosting platforms to multiply batch capacities per GPU card without encountering out-of-memory errors. | 2023 | [vLLM Paper](https://arxiv.org/abs/2309.06180) |
+| **Massive Long-Context Sequence Parsing (Gemini / Llama 3 Ultra-Long)** | Unlocks massive text processing horizons (up to 128K+ tokens). GQA prevents the model's tracking cache from inflating exponentially, allowing systems to ingest complete document libraries or codebases in a single prompt. | 2023 | N/A |
+| **Edge-Device On-Chip Deep Learning Executions (Apple Silicon / Snapdragon)** | Minimizes processing overhead on localized consumer devices. Compressing model attention structures via GQA lowers memory footprints enough to serve interactive assistants directly on local mobile hardware and laptops. | 2023 | N/A |
 
 ---
 
@@ -128,4 +116,3 @@ To advance this documentation repository, scaling architecture, or MLOps automat
 * Generate a **comprehensive Markdown table** explicitly comparing Multi-Head Attention (MHA), Multi-Query Attention (MQA), Grouped-Query Attention (GQA), and Multi-head Latent Attention (MLA) across VRAM cache scaling rates, training stability metrics, and serving latencies.
 
 ***
-
